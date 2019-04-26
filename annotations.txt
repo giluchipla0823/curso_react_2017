@@ -1,0 +1,196 @@
+# Install react
+-  npm install -g create-react-app
+
+# Crear proyecto 
+- Teniendo un boilerplate
+  create-react-app my-app
+
+- Desde cero
+  https://github.com/LeonidasEsteban/webpack-curso
+
+  npm install react react-dom --save
+
+
+# Validador de propiedades
+PropTypes.oneOf([‘typo1’, ‘typo2’]) para validar que llegue un dato que este dentro de los tipos de datos del array.
+
+PropTypes.<tipo>.isRequired para que una propiedad sea obligatoria.
+
+- Documentation: 
+https://reactjs.org/docs/typechecking-with-proptypes.html
+
+- Install:
+npm install prop-types --save
+
+
+# Enlazar eventos al DOM
+- Documentation: 
+https://reactjs.org/docs/handling-events.html
+
+
+Para enlazar los eventos que reaccionen a un click dentro de los componentes, hay que utilizar onClick (on + el evento) y a esta le asignamos una función a ejecutar handleClick dentro del elemento que va a lanzar el evento.
+
+<div className="Media" onClick={this.handleClick}>
+Para enlazar las propiedades (props) de nuestro componente a la clase Media, hay que utilizar el metodo constructor pasandole props y usando el metodo super tambien con las props como parametro.
+
+Es necesario cambiar el contexto de la función handleClick, para eso utilizamos bind(this).
+
+constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+}
+Con ES7, en lugar de estar bindeando cada función de nuestro componente, podemos utilizar arrow functions.
+
+handleClick = (event) => {
+    console.log(this.props.title);
+}
+A handleClick le asignamos una arrow function que recibe el evento y realiza las acciones.
+Esto funciona debido a que las arrow functions hederan el contexto del padre, así no es necesario bindear.
+
+
+# Estado de los componentes en ReactJs
+
+Las propiedades (props) son inmutables, es decir; estas no pueden cambiar. En el caso que quisiéramos que algo cambie en nuestro componente, hay que manejarlo con el estado de nuestros componentes, el cual permite tener contenido dinámico.
+
+Para inicializar el estado tenemos que hacer uso de nuestro metodo constructor:
+
+constructor(props) {
+    super(props);
+    this.state = {
+        author: props.author
+    }
+}
+Y en nuestros elementos vamos a utilizar state en lugar de props:
+
+<p className="Media-author">{this.state.author}</p>
+Para cambiar el estado tenemos un método especifico setSate() al cual le pasamos los valores que queremos modificar en nuestro estado.
+
+handleClick = (event) => {
+    this.setState({
+        author: 'Emmanuel Alonso'
+    })
+}
+Con ES7 podemos hacer definir el estado directamente, en lugar de usar el constructor:
+
+state = {
+    author: 'Ivan Robles'
+}
+
+# Ciclo de vida de los componentes:
+class MiComponente extends Components{
+
+	constructor(){
+	// Enlazo (bind) eventos y/o inicializo estado
+	}
+	componentWillMount(){
+	// Se ejecuta antes de montar el componente
+	// Se podría usar para hacer un setState()
+	}
+	render(){
+	// Contiene todos los elementos a renderizar
+	// podrías usarlo para calcular propiedades (ej: concatenar una cadena)
+	}
+	componentDidMount(){
+	//Solo se lanza una vez
+	//Ideal para llamar a una API, hacer un setInteval, etc
+	}
+
+	//Actualización:
+	componentWillReceiveProps(){
+	//Es llamado cuando el componente recibe nuevas propiedades.
+
+	}
+	shouldComponentUpdate(){
+	//Idea para poner una condición y  si las propiedades que le llegaron anteriormente
+	// eran las mismas que tenia retornar false para evitar re-renderear el componente
+	}
+	componentWillUpdate(){
+	//metodo llamado antes de re-renderizar el componente si shouldComponentUpdate devolvió true
+	}
+
+	// re-render si es necesario...
+
+	componentDidUpdate(){
+	//Método llamado luego del re-render
+	}
+	componentWillUnmount(){
+	//Método llamado antes de desmontar el componente
+	}
+	componentDidCatch(){
+	// Si ocurre algún error, lo capturo desde acá:
+	}
+
+}
+
+https://rangle.github.io/react-training/react-summary/
+
+Los métodos de los Componentes son llamados en momentos específicos:
+
+constructor cuando se crea el componente (como siempre)
+componentDidMount cuando el componente es agregado al DOM
+componentWillMount durante la renderización en el servidor
+componentWillUnmount cuando el componente está siendo eliminado
+shouldComponentUpdate luego de que el estado (state) o las propiedades (props) del componente han sido modificadas.
+componentWillUpdate y componentDidUpdate antes y después de que el componente se re-renderice.
+componentWillReceiveProps antes de que el componente haya recibido propiedades (props) cuto valor haya cambiado
+
+
+# Listas en REACT
+
+# Componentes puros y funcionales en ReactJS
+PureComponent: tiene el método shouldComponentUpdate ya asignado (por defecto), si a este componente no se le actualizan las propiedades, no tenemos que validar a mano con shouldComponentUpdate, PureComponent lo hace por nosotros, es decir; si recibe nuevas propiedades pero son las que ya teniamos, no se re-renderiza.
+
+Componente Funcional: Es una función la cual solo retorna el JSX de nuestro componente (renderiza UI), es mas sencillo, mas fácil de probar y este componente no tiene ciclo de vida.
+
+
+# Componentes puros y funcionales en ReactJS
+Presentacional Cómo se ve (Dumb)
+
+Puede contener smart components u otros componentes de UI
+Permiten composición con `[props.children]``
+No depeden del resto de la aplicación
+No especifica cómo los datos son cargados o mutados
+Recibe datos y callbacks solo con propiedades
+Rara vez tienen su propio estado
+Están escritos como componentes funcionales a menos que necesiten mejoras de performance. Sólo pueden ser Componentes funcionales o Pure Components
+
+Containers Qué hace (Smart)
+
+Concetrado en el funcionamiento de la aplicación
+Contienen componentes de UI u otros containers
+No tienen estilos
+Proveen de datos a componentes de UI u otros contenedores
+Proveen de callbacks a la UI
+Normalmente tienen estado
+Llaman acciones
+Generados por higher order components
+
+¿Para que aplicar smart y dumb?
+- Separación de responsabilidades.
+- Mejorar la capacidad de reutilizar componentes.
+
+
+# Composición de componentes
+
+
+
+# Portales
+Portales es la manera en la que podemos renderizar componentes fuera del contenedor principal de la aplicación.
+
+<div id="App"></div>
+El caso de uso mas común son las ventanas modal.
+
+Para crear un portal, se debe importar el metodo createPortal de react-dom:
+
+import { createPortal} from 'react-dom';
+El metodo createPortal() recibe dos parametros, al igual que con render es Lo que se va a renderizar y donde se va a renderizar:
+
+class ModalContainer extends Component {
+  render() {
+    return (
+      createPortal(<Component />, document.getElementById('component-container'))
+    )
+  }
+}
+
+# Build para produccion
